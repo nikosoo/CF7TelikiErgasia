@@ -1,5 +1,3 @@
 # ProjectSocialMedia
 # CF7Ergasia
-Η εργασια μου ειναι ενα socia media project μπορειτε να κανετε register και μετα login εχω βαλει ηδη καποιους test χρηστες
-Το Backend τρεχει με την εντολη node index.js και το frontend τρεχει με την εντολη npm run dev 
-για να κανετε build το frontend γινετε με την εντολη npm run buld 
+Η εργασία μου είναι ένα social media project. Μπορείτε να κάνετε register και μετά login. Έχω βάλει ήδη κάποιους test χρήστες. Το Backend τρέχει με την εντολή node index.js και το frontend τρέχει με την εντολή npm run dev. Για να κάνετε build το frontend γίνεται με την εντολή npm run build.
