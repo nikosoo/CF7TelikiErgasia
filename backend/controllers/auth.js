@@ -10,17 +10,10 @@ export const register = async (req, res) => {
       lastName,
       email,
       password,
-      picturePath,
       friends,
       location,
       occupation,
     } = req.body;
-
-    // Check if user with email already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(409).json({ message: "Email already exists" }); // 409 Conflict
-    }
 
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, salt);
@@ -30,7 +23,6 @@ export const register = async (req, res) => {
       lastName,
       email,
       password: passwordHash,
-      picturePath,
       friends,
       location,
       occupation,
@@ -40,7 +32,7 @@ export const register = async (req, res) => {
     res.status(201).json(savedUser);
   } catch (err) {
     console.error("Register error:", err);
-    res.status(500).json({ message: "Server error during registration." });
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -48,29 +40,18 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
     const user = await User.findOne({ email: email });
-    if (!user)
-      return res.status(404).json({ message: "User does not exist." });
+    if (!user) return res.status(400).json({ msg: "User does not exist." });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res.status(400).json({ message: "Invalid credentials." });
+    if (!isMatch) return res.status(400).json({ msg: "Invalid credentials." });
 
-    if (!process.env.JWT_SECRET) {
-      return res.status(500).json({ message: "JWT secret not configured." });
-    }
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const userWithoutPassword = user.toObject();
+    delete userWithoutPassword.password;
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
-
-    const userObj = user.toObject();
-    delete userObj.password;
-
-    res.status(200).json({ token, user: userObj });
+    res.status(200).json({ token, user: userWithoutPassword });
   } catch (err) {
-    console.error("Login error:", err);
-    res.status(500).json({ message: "Server error during login." });
+    res.status(500).json({ error: err.message });
   }
 };
