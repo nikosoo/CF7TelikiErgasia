@@ -4,8 +4,7 @@ import { setPost, removePost, addNotification } from "../../state";
 import Friend from "../../components/Friend";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { FaTrashAlt } from "react-icons/fa";
-import { MdComment } from "react-icons/md"; // Import bubble icon
-import UserImage from "../../components/UserImage";
+import { MdComment } from "react-icons/md";
 
 const PostWidget = ({
   postId,
@@ -13,8 +12,6 @@ const PostWidget = ({
   name,
   description,
   location,
-  picturePath,
-  userPicturePath,
   likes,
   comments,
   isProfile,
@@ -137,18 +134,10 @@ const PostWidget = ({
         friendId={postUserId}
         name={name}
         subtitle={location}
-        userPicturePath={userPicturePath}
         showButton={!isProfile}
       />
       <p className="text-gray-800 mt-4 text-lg">{description}</p>
-      {picturePath && (
-        <img
-          className="mt-4 rounded-lg"
-          style={{ maxWidth: "100%", height: "auto" }}
-          src={`http://localhost:3000/assets/${picturePath}`}
-          alt="Post"
-        />
-      )}
+
       <div className="flex justify-between items-center mt-4">
         <div className="flex items-center space-x-2">
           <button onClick={patchLike} className="focus:outline-none">

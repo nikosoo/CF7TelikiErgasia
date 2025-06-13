@@ -2,9 +2,8 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setFriends } from "../state";
-import UserImage from "./UserImage";
 
-const Friend = ({ friendId, name, subtitle, userPicturePath, showButton }) => {
+const Friend = ({ friendId, name, subtitle, showButton }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { _id, friends } = useSelector((state) => state.user);
@@ -40,17 +39,14 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, showButton }) => {
 
   return (
     <div className="flex justify-between items-center mb-2">
-      <div className="flex items-center gap-2">
-        <UserImage image={userPicturePath} size="60" />
-        <div
-          onClick={() => navigate(`/profile/${friendId}`)}
-          className="cursor-pointer"
-        >
-          <p className="text-lg font-medium text-gray-800 hover:text-blue-500 m-0">
-            {name}
-          </p>
-          <p className="text-sm text-gray-500 m-0">{subtitle}</p>
-        </div>
+      <div
+        onClick={() => navigate(`/profile/${friendId}`)}
+        className="cursor-pointer flex flex-col"
+      >
+        <p className="text-lg font-medium text-gray-800 hover:text-blue-500 m-0">
+          {name}
+        </p>
+        <p className="text-sm text-gray-500 m-0">{subtitle}</p>
       </div>
       {showButton && !isSelf && (
         <button

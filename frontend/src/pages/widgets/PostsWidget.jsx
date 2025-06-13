@@ -17,9 +17,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      if (!response.ok) {
-        throw new Error("Failed to fetch posts");
-      }
+      if (!response.ok) throw new Error("Failed to fetch posts");
       const data = await response.json();
       dispatch(setPosts({ posts: data }));
     } catch (error) {
@@ -36,9 +34,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      if (!response.ok) {
-        throw new Error("Failed to fetch user posts");
-      }
+      if (!response.ok) throw new Error("Failed to fetch user posts");
       const data = await response.json();
       dispatch(setPosts({ posts: data }));
     } catch (error) {
@@ -73,25 +69,20 @@ const PostsWidget = ({ userId, isProfile = false }) => {
           lastName,
           description,
           location,
-          picturePath,
-          userPicturePath,
           likes,
           comments,
         }) => (
-          <div key={_id}>
-            <PostWidget
-              postId={_id}
-              postUserId={userId}
-              name={`${firstName} ${lastName}`}
-              description={description}
-              location={location}
-              picturePath={picturePath}
-              userPicturePath={userPicturePath}
-              likes={likes}
-              comments={comments}
-              isProfile={isProfile} // Pass isProfile prop to PostWidget
-            />
-          </div>
+          <PostWidget
+            key={_id}
+            postId={_id}
+            postUserId={userId}
+            name={`${firstName} ${lastName}`}
+            description={description}
+            location={location}
+            likes={likes}
+            comments={comments}
+            isProfile={isProfile}
+          />
         )
       )}
     </div>

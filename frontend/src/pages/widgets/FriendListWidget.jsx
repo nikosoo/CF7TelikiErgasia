@@ -26,10 +26,22 @@ const FriendListWidget = ({ userId, isProfilePage }) => {
 
   useEffect(() => {
     getFriends();
-  }, [userId, token, dispatch]);
+  }, [userId, token]);
 
-  if (!friends || friends.length === 0) {
-    return <div>Loading...</div>;
+  if (!friends) {
+    return (
+      <div className="p-4 bg-white border border-purple-200 rounded-lg shadow-lg text-center text-gray-500">
+        Loading friends...
+      </div>
+    );
+  }
+
+  if (friends.length === 0) {
+    return (
+      <div className="p-4 bg-white border border-purple-200 rounded-lg shadow-lg text-center text-gray-500">
+        No friends found.
+      </div>
+    );
   }
 
   return (
@@ -38,16 +50,17 @@ const FriendListWidget = ({ userId, isProfilePage }) => {
         Friend List
       </h2>
       <div className="flex flex-col gap-6">
-        {friends.map((friend, index) => (
-          <Friend
-            key={friend._id || index} // Use index as a fallback key
-            friendId={friend._id}
-            name={`${friend.firstName} ${friend.lastName}`}
-            subtitle={friend.occupation}
-            userPicturePath={friend.picturePath}
-            showButton={!isProfilePage}
-          />
-        ))}
+        {friends
+          .filter((friend) => friend._id) // Ensure _id exists
+          .map((friend) => (
+            <Friend
+              key={friend._id}
+              friendId={friend._id}
+              name={`${friend.firstName} ${friend.lastName}`}
+              subtitle={friend.occupation}
+              showButton={!isProfilePage}
+            />
+          ))}
       </div>
     </div>
   );

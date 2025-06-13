@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import UserImage from "../../components/UserImage"; // Adjust path as necessary
-import { FiArrowRight, FiMapPin, FiBriefcase } from "react-icons/fi"; // Import icons from react-icons
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { FiArrowRight, FiMapPin, FiBriefcase } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 const UserWidget = ({ userId }) => {
   const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
   const token = useSelector((state) => state.token);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const getUser = async () => {
     try {
@@ -23,8 +23,10 @@ const UserWidget = ({ userId }) => {
       }
       const data = await response.json();
       setUser(data);
+      setError(null);
     } catch (error) {
       console.error("Error fetching user data:", error.message);
+      setError(error.message);
     }
   };
 
@@ -32,7 +34,11 @@ const UserWidget = ({ userId }) => {
     if (userId) {
       getUser();
     }
-  }, [userId]);
+  }, [userId, token]);
+
+  if (error) {
+    return <p className="text-red-600">Error: {error}</p>;
+  }
 
   if (!user) {
     return <p>Loading...</p>;
@@ -42,27 +48,27 @@ const UserWidget = ({ userId }) => {
     user;
 
   const handleProfileNavigation = () => {
-    navigate(`/profile/${userId}`); // Navigate to the user's profile
+    navigate(`/profile/${userId}`);
   };
 
   return (
     <div className="bg-purple-50 rounded-lg shadow-lg p-6">
       {/* FIRST ROW */}
-      <div
-        className="flex justify-between items-center gap-4 pb-4 cursor-pointer hover:bg-purple-100 transition-colors duration-300"
-        onClick={handleProfileNavigation} // Handle click for navigation
+      <button
+        onClick={handleProfileNavigation}
+        className="w-full flex justify-between items-center gap-4 pb-4 cursor-pointer hover:bg-purple-100 transition-colors duration-300 focus:outline-none"
+        aria-label={`Go to profile of ${firstName} ${lastName}`}
       >
         <div className="flex items-center gap-4">
-          <UserImage image={picturePath} size="60px" />
           <div>
             <h4 className="text-xl font-semibold text-purple-800">
               {firstName} {lastName}
             </h4>
-            <p className="text-purple-600">{friends.length} friends</p>
+            <p className="text-purple-600">{friends?.length || 0} friends</p>
           </div>
         </div>
         <FiArrowRight className="h-6 w-6 text-purple-600" />
-      </div>
+      </button>
 
       <hr className="my-4 border-purple-200" />
 
